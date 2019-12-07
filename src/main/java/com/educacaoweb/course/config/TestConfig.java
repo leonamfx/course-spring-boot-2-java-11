@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import com.educacaoweb.course.entities.Role;
 
 import com.educacaoweb.course.entities.Category;
 import com.educacaoweb.course.entities.Order;
@@ -19,6 +20,7 @@ import com.educacaoweb.course.repositories.CategoryRepository;
 import com.educacaoweb.course.repositories.OrderItemRepository;
 import com.educacaoweb.course.repositories.OrderRepository;
 import com.educacaoweb.course.repositories.ProductRepository;
+import com.educacaoweb.course.repositories.RoleRepository;
 import com.educacaoweb.course.repositories.UserRepository;
 
 @Configuration
@@ -39,6 +41,9 @@ public class TestConfig implements CommandLineRunner{
 
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -76,6 +81,16 @@ public class TestConfig implements CommandLineRunner{
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.WAITING_PAYMENT, u1);
 		
 		userRepository.saveAll(Arrays.asList(u1,u2));
+		
+		Role r1 = new Role(null, "ROLE_CLIENT");
+		Role r2 = new Role(null, "ROLE_ADMIN");
+		
+		roleRepository.saveAll(Arrays.asList(r1, r2));
+		
+		u1.getRoles().add(r1);
+		u2.getRoles().add(r1);
+		u2.getRoles().add(r2);
+		
 		orderRepository.saveAll(Arrays.asList(o1,o2, o3));
 		
 		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
