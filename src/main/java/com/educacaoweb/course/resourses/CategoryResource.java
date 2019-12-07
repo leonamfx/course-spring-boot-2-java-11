@@ -27,9 +27,16 @@ public class CategoryResource {
 	@Autowired
 	private CategoryService service;
 	
+	
 	@GetMapping
 	public ResponseEntity<List<CategoryDTO>> findAll() {
 		List<CategoryDTO> list = service.findAll();
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@GetMapping(value="/product/{productId}")
+	public ResponseEntity<List<CategoryDTO>> findByProduct(@PathVariable Long productId ){
+		List<CategoryDTO> list= service.findByProduct(productId);
 		return ResponseEntity.ok().body(list);
 	}
 	
@@ -39,6 +46,7 @@ public class CategoryResource {
 		return ResponseEntity.ok().body(dto);
 	}
 	
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
