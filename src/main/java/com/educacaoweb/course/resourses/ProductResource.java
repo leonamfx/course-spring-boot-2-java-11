@@ -1,5 +1,6 @@
 package com.educacaoweb.course.resourses;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.educacaoweb.course.dto.ProductCategoriesDTO;
 import com.educacaoweb.course.dto.ProductDTO;
-import com.educacaoweb.course.entities.Product;
 import com.educacaoweb.course.servises.ProductService;
 
 @RestController
@@ -37,6 +38,12 @@ public class ProductResource {
 		return ResponseEntity.ok().body(dto);
 	}
 	
+	@PostMapping
+	public ResponseEntity<ProductDTO> insert(@RequestBody ProductCategoriesDTO  dto){
+		ProductDTO newDto = service.insert(dto);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
+		return ResponseEntity.created(uri).body(newDto);
+	}
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductCategoriesDTO dto){
