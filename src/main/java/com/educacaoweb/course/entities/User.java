@@ -168,6 +168,15 @@ public class User implements UserDetails {
 		return false;
 	}
 
+	public boolean hasRole(String roleName) {
+
+		for(Role role : roles) {
+			if(role.getAuthority().equals(roleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 
