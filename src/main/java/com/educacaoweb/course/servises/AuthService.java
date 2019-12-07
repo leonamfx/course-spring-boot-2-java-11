@@ -67,6 +67,12 @@ public class AuthService {
 		User user= authenticated();
 		if(user == null || (!user.getId().equals(order.getId())) && !user.hasRole("ROLE_ADMIN")) {
 			throw new JWTAuthorizationException("Acess denied");
-		}
+		}		
+	}
+	
+	public TokenDTO refreshToken() {
+		User user= authenticated();
+		return new TokenDTO(user.getEmail(),jwtUtil.generateToken(user.getEmail()));
+
 	}
 }
