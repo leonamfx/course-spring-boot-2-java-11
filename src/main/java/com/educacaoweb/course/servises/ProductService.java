@@ -3,14 +3,16 @@ package com.educacaoweb.course.servises;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.educacaoweb.course.dto.CategoryDTO;
 import com.educacaoweb.course.dto.ProductCategoriesDTO;
@@ -100,5 +102,13 @@ public class ProductService {
 
 	public void setCategoryRepository(CategoryRepository categoryRepository) {
 		this.categoryRepository = categoryRepository;
+	}
+	
+	@Transactional(readOnly=true)
+	public Page<ProductDTO> findByCategoryPaged(Long categoryId, PageRequest pageRequest) {
+		Category category = categoryRepository.getOne(categoryId);
+		Page<Product> products = repository.findByCategory(category,pageRequest);
+
+		return products.map(e -> new ProductDTO(e));
 	}
 }
